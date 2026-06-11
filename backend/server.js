@@ -7,8 +7,19 @@ import scanRoutes from "./routes/scanRoutes.js";
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: false
+    })
+);
+
 app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.send("AutoQA Backend Running");
+});
 
 const server = http.createServer(app);
 

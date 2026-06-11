@@ -5,20 +5,24 @@ import { generateReport } from "./reportGenerator.js";
 
 export const crawlWebsite = async (url) => {
 
-    const browser = await chromium.launch({
-        headless: true
-    });
-
-    const page = await browser.newPage();
-
-    const report = {
-        pagesVisited: [],
-        linksFound: [],
-        buttonsFound: [],
-        brokenLinks: []
-    };
+    let browser;
 
     try {
+
+        console.log("Starting scan for:", url);
+
+        browser = await chromium.launch({
+            headless: true
+        });
+
+        const page = await browser.newPage();
+
+        const report = {
+            pagesVisited: [],
+            linksFound: [],
+            buttonsFound: [],
+            brokenLinks: []
+        };
 
         io.emit("scanUpdate", {
             type: "status",
@@ -27,12 +31,16 @@ export const crawlWebsite = async (url) => {
 
         await page.goto(url, {
             waitUntil: "domcontentloaded",
-            timeout: 10000
+            timeout: 15000
         });
 
         report.pagesVisited.push(url);
 
-        await saveScreenshot(page, "home");
+        try {
+            await saveScreenshot(page, "home");
+        } catch (error) {
+            console.log("Screenshot failed:", error.message);
+        }
 
         const links = await page.$$eval(
             "a",
@@ -50,6 +58,8 @@ export const crawlWebsite = async (url) => {
         });
 
         const buttons = await page.$$("button");
+
+        report.buttonsFound = buttons.length;
 
         io.emit("scanUpdate", {
             type: "status",
@@ -78,18 +88,15 @@ export const crawlWebsite = async (url) => {
                     message: `Clicked ${text}`
                 });
 
-            } catch {
+            } catch (error) {
 
-                io.emit("scanUpdate", {
-                    type: "warning",
-                    message: "Button click failed"
-                });
+                console.log("Button click failed:", error.message);
 
             }
 
         }
 
-        for (const link of links.slice(0, 10)) {
+        for (const link of links.slice(0, 5)) {
 
             try {
 
@@ -109,7 +116,7 @@ export const crawlWebsite = async (url) => {
 
                 await newPage.close();
 
-            } catch {
+            } catch (error) {
 
                 report.brokenLinks.push(link);
 
@@ -122,20 +129,29 @@ export const crawlWebsite = async (url) => {
 
         }
 
-        generateReport(report);
+        try {
+            generateReport(report);
+        } catch (error) {
+            console.log("Report generation failed:", error.message);
+        }
 
         io.emit("scanComplete", report);
 
-        await browser.close();
-
     } catch (error) {
+
+        console.error("CRAWLER ERROR:", error);
 
         io.emit("scanUpdate", {
             type: "error",
             message: error.message
         });
 
-        await browser.close();
+    } finally {
+
+        if (browser) {
+            await browser.close();
+        }
+
     }
 
 };
