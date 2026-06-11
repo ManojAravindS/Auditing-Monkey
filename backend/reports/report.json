@@ -1,0 +1,11 @@
+{
+  "pagesVisited": [
+    "https://example.com",
+    "https://iana.org/domains/example"
+  ],
+  "linksFound": [
+    "https://iana.org/domains/example"
+  ],
+  "buttonsFound": [],
+  "brokenLinks": []
+}
