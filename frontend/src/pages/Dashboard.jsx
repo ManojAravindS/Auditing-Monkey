@@ -48,7 +48,7 @@ export default function Dashboard() {
     return (
         <div className="container">
 
-            <h1>AutoQA AI</h1>
+            <h1>Auditing-Monkey</h1>
 
             <input
                 value={url}
