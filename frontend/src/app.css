@@ -1,29 +1,54 @@
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f4f4;
+body {
+  background: #0B1020;
+  color: white;
+  margin: 0;
+  font-family: Inter, sans-serif;
 }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:30px;
+.container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 30px;
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
+.card {
+  background: #151B2E;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #2A3556;
 }
 
-button{
-  padding:12px 20px;
-  cursor:pointer;
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #8B5CF6;
 }
 
-.report{
-  margin-top:20px;
-  background:white;
-  padding:20px;
-  border-radius:10px;
+.subtitle {
+  color: #A0AEC0;
+  margin-bottom: 30px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+button {
+  background: #8B5CF6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+}
+
+input {
+  background: #151B2E;
+  border: 1px solid #2A3556;
+  color: white;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
 }
